@@ -46,6 +46,7 @@ def scroll_page(driver: WebDriver):
 
         new_height = driver.execute_script("return document.body.scrollHeight")
 
+        time.sleep(2)
         if new_height == last_height:
             break
 
@@ -54,16 +55,14 @@ def scroll_page(driver: WebDriver):
 
 def scrape_products(driver: WebDriver, wait: WebDriverWait[WebDriver]):
 
+    wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".dne-itemtile")))
+
     products = driver.find_elements(By.CSS_SELECTOR, ".dne-itemtile")
 
     data = []
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     for product in products:
-        # html = product.get_attribute("outerHTML")
-        # if html:
-        #     soup = BeautifulSoup(html, "html.parser")
-        #     print(soup.prettify())
         try:
             title = product.find_element(By.CLASS_NAME, "dne-itemtile-title").text
         except:
